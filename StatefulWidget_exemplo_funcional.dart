@@ -11,10 +11,11 @@ class AppWidget extends StatelessWidget {
   }
 }
 
+// Aqui a classe que cuida do gerenciamento do Status
+// O código principal não fica aqui, mas esse bloco deve ser criado.
 class MyApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return MyappState(contador: 0);
   }
 }
@@ -33,7 +34,6 @@ class MyappState extends State<StatefulWidget> {
         children: [
           Center(
               child: Text(
-            // ignore: prefer_interpolation_to_compose_strings
             'Flutter! contador = $contador',
           )),
           ElevatedButton(
