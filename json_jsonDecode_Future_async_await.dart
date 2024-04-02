@@ -39,6 +39,9 @@ class _MyHomePageState extends State<MyHomePage> {
   late Map<String, dynamic> jsonData;
   String textoDoJson = 'nada';
 
+  // Criamos um objeto que vai receber todo o json;
+  late Tudo tudo = Tudo(title: '10', completed: true, id: 10, userId: 10);
+
   // O método que vai puxar o json, é um Future, usando async e await;
   Future<void> getData() async {
     var response = await http
@@ -49,11 +52,17 @@ class _MyHomePageState extends State<MyHomePage> {
       jsonData =
           jsonDecode(response.body); // Convertendo o puxado para o objeto;
       print(jsonData);
+      textoDoJson = jsonData['title'];
+
+      // Agora vamos atribuir todo o conteúdo do json manualmente para um arquivo semelhante;
+      tudo = Tudo(
+          title: jsonData['title'],
+          completed: jsonData['completed'],
+          id: jsonData['id'],
+          userId: jsonData['userId']);
     } else {
       throw Exception('Erro no Json!');
     }
-
-    textoDoJson = jsonData['title'];
   }
 
   @override
@@ -71,6 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
               textoDoJson,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            Text(
+              tudo.id.toString(),
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             ElevatedButton(
                 onPressed: () {
                   setState(() {
@@ -83,4 +96,45 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+// Objeto que vai receber todo o json;
+class Tudo {
+  String title;
+  int id;
+  int userId;
+  bool completed;
+
+  Tudo(
+      {required this.title,
+      required this.completed,
+      required this.id,
+      required this.userId});
+
+  // Com o método abaixo instanciamos o objeto com dados do json;
+  // Assim podemos reutilizar o código e não instanciar objeto por objeto
+  // tudo = Tudo.fromJason(json);
+  Tudo.fromJason(Map<String, dynamic>) : 
+  title = json['title'] as String, 
+  id = json['id'] as String,
+  userId = json['userId'] as String, 
+  completed = json['completed'] as String;
+  
+  // Método do Fluterando;
+  factory Tudo.fromJason(Map json){
+    return Tudo(
+      title: json['title'], 
+      id: json['id'],
+      userId: json['userId'],
+      completed: json['completed'];
+    );
+  }
+
+  // Já o método abaixo transforma o objeto em um json;
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'id': id,
+        'userId' : userId;
+        'completed' : completed;
+      };
 }
